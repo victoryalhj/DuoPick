@@ -1,3 +1,5 @@
+'use strict'
+
 const mongoose = require('mongoose');
 
 //code - Invite code

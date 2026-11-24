@@ -1,0 +1,88 @@
+.group-setup {
+    min-height: 100vh;
+    width: 100%;
+    background-color: #101827;
+    color: #f8fafc;
+    padding: 60px 24px;
+    box-sizing: border-box;
+}
+.group-card {
+    background-color: #1e293b;
+    padding: 30px;
+    border-radius: 16px;
+    margin: 25px auto;
+    max-width: 550px;
+    text-align: left;
+    border: 1px solid #334155;
+}
+.group-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.group-card input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    background-color: #0f172a;
+    color: #f8fafc;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+.group-card button {
+    background-color: #10b981;
+    color: #ffffff;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.group-card button:hover {
+    background-color: #059669;
+}
+.group-card input:focus {
+    outline: 2px solid #10b981;
+    outline-offset: 2px;
+}
+.group-setup h1 {
+    font-size: 48px;
+    font-weight: 700;
+    text-align: center;
+    margin: 0 0 12px;
+    letter-spacing: -1.5px;
+}
+
+.group-setup > p {
+    font-size: 16px;
+    color: #94a3b8;
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.group-card h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 20px;
+}
+@media (max-width: 600px) {
+    .group-setup {
+        padding: 32px 16px;
+    }
+
+    .group-setup h1 {
+        font-size: 36px;
+    }
+
+    .group-card {
+        padding: 22px;
+        margin: 20px auto;
+    }
+
+    .group-card h2 {
+        font-size: 20px;
+    }
+}

@@ -7,8 +7,8 @@ const mongoose = require('mongoose');
 //pickedId - Selected Id
 const groupSchema = new mongoose.Schema(
   {
-    code: {type: String, require: true},
-    name: {type: String, require: true},
+    code: {type: String, required: true},
+    name: {type: String, required: true},
     budget: {type: Number},
     pickedId: {type: String},
     members: {type: Array, default: []},

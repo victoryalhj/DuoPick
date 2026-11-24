@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './GroupSetup.css'
 
 
-function GroupSetup() {
+function GroupSetup({onGroupReady}) {
     const [groupName, setGroupName] = useState('')
     const [members, setMembers] = useState('')
     const [inviteCode, setInviteCode] = useState('')
@@ -12,17 +12,32 @@ function GroupSetup() {
 
         console.log('Group name:', groupName)
         console.log('Members:', members)
+
+        //Added mock group with response from createGroup API
+        const createdCode = 'abc1234'
+        onGroupReady?.({
+          code: createdCode,
+          name: groupName.trim(),
+          members: members.trim(),
+        })
     }
 
     function handleJoinGroup(event) {
         event.preventDefault()
 
+        //create trimmedCode
+        const trimmedCode = inviteCode.trim()
         if (inviteCode.trim().length !== 6) {
             alert('Invitation code must be exactly 6 characters')
             return
         }
 
-        console.log('Joining group with code:', inviteCode)
+        //connected trimmedCode
+        onGroupReady?.({
+          code: trimmedCode,
+        })
+        console.log('Joining group with code:', trimmedCode)  
+        // console.log('Joining group with code:', inviteCode)
     }
 
     return (

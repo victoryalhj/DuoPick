@@ -9,7 +9,7 @@ const cors = require('@koa/cors')
 
 const groupRoutes = require('./routes/groupRoutes');
 // const walletRoutes = require('');
-// const planRoutes = require('');
+const planRoutes = require('./routes/planRoutes');
 // const archiveRoutes = require('');
 
 const app = new Koa();
@@ -20,7 +20,7 @@ app.use(bodyParser());
 
 app.use(groupRoutes.routes()).use(groupRoutes.allowedMethods());
 // app.use(walletRoutes.routes()).use(walletRoutes.allowedMethods());
-// app.use(planRoutes.routes()).use(planRoutes.allowedMethods());
+app.use(planRoutes.routes()).use(planRoutes.allowedMethods());
 // app.use(archiveRoutes.routes()).use(archiveRoutes.allowedMethods());
 
 app.listen(PORT, () => {

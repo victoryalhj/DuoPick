@@ -1,25 +1,30 @@
 import { useState } from 'react'
 import './GroupSetup.css'
+import { createGroup } from '../../services/api'
 
 
-function GroupSetup({onGroupReady}) {
+function GroupSetup({ onGroupReady }) {
     const [groupName, setGroupName] = useState('')
     const [members, setMembers] = useState('')
     const [inviteCode, setInviteCode] = useState('')
 
-    function handleCreateGroup(event) {
+    async function handleCreateGroup(event) {
         event.preventDefault()
 
-        console.log('Group name:', groupName)
-        console.log('Members:', members)
+        try {
+            const groupData = {
+                name: groupName.trim(),
+                members: members.split(',').map(member => member.trim()).filter(Boolean),
+            }
 
-        //Added mock group with response from createGroup API
-        const createdCode = 'abc1234'
-        onGroupReady?.({
-          code: createdCode,
-          name: groupName.trim(),
-          members: members.trim(),
-        })
+            const createdGroup = await createGroup(groupData)
+
+            onGroupReady?.(createdGroup)
+
+        } catch (error) {
+            console.error('Error creating group:', error)
+            alert('Failed to create group')
+        }
     }
 
     function handleJoinGroup(event) {
@@ -34,9 +39,9 @@ function GroupSetup({onGroupReady}) {
 
         //connected trimmedCode
         onGroupReady?.({
-          code: trimmedCode,
+            code: trimmedCode,
         })
-        console.log('Joining group with code:', trimmedCode)  
+        console.log('Joining group with code:', trimmedCode)
         // console.log('Joining group with code:', inviteCode)
     }
 

@@ -36,3 +36,18 @@ export async function deletePlanData (code, planId) {
   }
   return response.json();
 }
+export async function createGroup(groupData) {
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(groupData),
+    })
+
+    if (!response.ok) {
+        throw new Error('Failed to create group')
+    }
+
+    return response.json()
+}

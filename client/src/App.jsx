@@ -38,7 +38,10 @@ function App() {
             <p>You(You)</p>
         </div>
 
-        <div className='budget-area'>
+        <div 
+          className='budget-area'
+          onClick={() => {setActiveTab('Wallet')}}
+          >
             <h3>Set budget</h3>
             <p>Open Wallet</p>
         </div>
@@ -66,14 +69,14 @@ function App() {
           </div>
       </div>
 
-      <div className='vote-notice-area'>
+      {/* <div className='vote-notice-area'>
           <h3>1 idea need your vote</h3>
           <button>Vote now</button>
-      </div>
+      </div> */}
 
-      <div className='decide-for-us-area'>
+      {/* <div className='decide-for-us-area'>
           <button>Decide for us</button>
-      </div>
+      </div> */}
 
       {activeTab === 'Plan' && <PlanTab code={groupCode}/>}
       {/* {activeTab === 'Archive' && <ArchiveTab code={code}/>}

@@ -70,29 +70,18 @@ function App() {
         </div>
       </div>
 
-<<<<<<< HEAD
-  {/* <div className='vote-notice-area'>
-          <h3>1 idea need your vote</h3>
-          <button>Vote now</button>
-      </div> */}
+      {/* <div className='vote-notice-area'>
+    <h3>1 idea need your vote</h3>
+    <button>Vote now</button>
+</div> */}
 
-  {/* <div className='decide-for-us-area'>
-          <button>Decide for us</button>
-      </div> */}
-=======
-      <div className='vote-notice-area'>
-        <h3>1 idea need your vote</h3>
-        <button>Vote now</button>
-      </div>
+      {/* <div className='decide-for-us-area'>
+    <button>Decide for us</button>
+</div> */}
 
-      <div className='decide-for-us-area'>
-        <button>Decide for us</button>
-      </div>
->>>>>>> featA-Patrick
-
-  { activeTab === 'Plan' && <PlanTab code={groupCode} /> }
-  { activeTab === 'Wallet' && <WalletTab code={groupCode} /> }
-  {/* {activeTab === 'Archive' && <ArchiveTab code={code}/>}
+      {activeTab === 'Plan' && <PlanTab code={groupCode} />}
+      {activeTab === 'Wallet' && <WalletTab code={groupCode} />}
+      {/* {activeTab === 'Archive' && <ArchiveTab code={code}/>}
       {activeTab === 'plan' && <WalletTab code={code}/>} */}
 
     </main >

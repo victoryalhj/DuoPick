@@ -132,6 +132,7 @@ function App() {
           <p>3 . Go</p>
           <p>then archive it</p>
         </div>
+<<<<<<< HEAD
       </div> */}
 
       {/* <div className='vote-notice-area'>

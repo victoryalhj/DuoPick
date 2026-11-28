@@ -1,4 +1,4 @@
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { postPlanData } from '../../services/api';
 import './PlanTab.css';
 import { format } from 'date-fns';
@@ -28,8 +28,14 @@ const suggestedIdeasList = {
 }
 
 //Keep track of which item is being edited and its temporary value
-export default function PlanTab({code}) {
-  const [plans, setPlans] = useState([]);
+export default function PlanTab({
+  code,
+  groupMembers=[],
+  currentUser='',
+  plans,
+  setPlans,
+  handleArchivePlan
+}) {
 
   const [newTitle, setNewTitle] = useState('');
   const [category, setCategory] = useState('Restaurant');
@@ -46,6 +52,12 @@ export default function PlanTab({code}) {
 
   const [editDateId, setEditDateId] = useState(null);
   const [draftDate, setDraftDate] = useState('');
+
+  const [archivingPlanId, setArchivingPlanId] = useState(null)
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState('');
+  const [tags, setTags] = useState('')
+  const [actualSpent, setActualSpent] = useState('')
 
   async function handleSubmit (e) {
     e.preventDefault();
@@ -110,6 +122,32 @@ export default function PlanTab({code}) {
     );
     setEditDateId(null);
   }
+
+  function handleRemovePlan (planId) {
+    setPlans((prevPlan) => prevPlan.filter((plan) => plan.id !== planId));
+  }
+
+  function handleOpenArchivingForm (plan) {
+    setArchivingPlanId(plan.id);
+    setRating(0);
+    setReview('');
+    setTags('');
+    setActualSpent('');
+  }
+
+  //Save form inputs for the plan and move it to the Archive tab
+  //Split comma-separated tags, trim whitespace, and remove empty strings into new array
+  //Fall back to plan budget if actualSpend is empty, otherwise use actualSpent
+  //Pass the archived details up to App.jsx to update plans and archive state
+  //' pub , food ' > [' pub ',' food '] > ['pub','food']
+  function handleSaveArchive (plan) {
+    const tag = tags.split(',').map((item) => item.trim()).filter((item) => item !== '')
+    const spent = actualSpent === '' ? Number(plan.budget) : Number(actualSpent);
+    
+    handleArchivePlan(plan.id, {rating, review, tags: tag, actualSpent: spent});
+    setArchivingPlanId(null);
+  }
+
 
   return (
     <section>
@@ -228,6 +266,7 @@ export default function PlanTab({code}) {
             {plans.map((plan) => (
               <div key={plan.id} className='each-idea-card'>
                   
+                  <div className='vote-check-area'>Your vote needed</div>
                   <h3>{plan.title}</h3>
 
                   <div className='category-details'>
@@ -297,16 +336,22 @@ export default function PlanTab({code}) {
                           setDraftDate(plan.date || format(new Date(), "yyyy-MM-dd'T'HH:mm"))
                         }}
                       >
-                        {plan.date ? format(new Date(plan.date), 'EEE, d MMM yyyy') : 'Pick a date'}
+                        {plan.date ? format(new Date(plan.date), 'EEE, d MMM yyyy ✎') : 'Pick a date'}
                       </div>
                     )}
                   </div>
 
                   <div className='member-details'>
-                    <button>You</button>
-                    <button>Partner</button>
+                    {groupMembers.map((member) => {
+                      const isSelected = member === currentUser;
+                      return (
+                        <button type='button' key={member} className={isSelected? 'active' : ''}>
+                          {isSelected ? `${member} (you)` : member}
+                        </button>
+                      )
+                    })}
                   </div>
-                  <p>Votes stay hidden until everyone has voted</p>
+
 
                   <div className='vote-details'>
                     <p>Your vote</p>
@@ -314,12 +359,71 @@ export default function PlanTab({code}) {
                     <button>👎 Pass</button>
                   </div>
 
+
                   <div className='unlock-details'>
-                    <button>We went → Archive</button>
-                    <button>Remove</button>
-                    <p>Unlocks when everyone has voted</p>
+                    <button 
+                      type='button'
+                      disabled={archivingPlanId === plan.id}
+                      onClick={() => handleOpenArchivingForm(plan)}  
+                    >We went → Archive</button>
+                    <button 
+                      type='button' 
+                      onClick={() => handleRemovePlan(plan.id)}
+                    >Remove</button>
                   </div>
+
+                  {archivingPlanId === plan.id && (
+                    <div>
+                      <hr/>
+                      <div className='archive-form'>
+                        <div>{[1,2,3,4,5].map((star) => (
+                          <button
+                            key={star}
+                            type='button'
+                            className={`star-btn ${star <= rating ? 'filled': ''}`}
+                            onClick={() => setRating(star)}
+                          >
+                           {star <= rating ? '★' : '☆'} 
+                          </button>
+                        ))}</div>
+
+                        <div className='archive-form-detail'>
+                          <input 
+                            value={review}
+                            type="text" 
+                            placeholder='One-line review'
+                            onChange={(e) => setReview(e.target.value)}
+                          />
+                          <input 
+                            value={tags}
+                            type="text" 
+                            placeholder='Tags, comma separated'
+                            onChange={(e) => setTags(e.target.value)}
+                          />
+                          <input 
+                            value={actualSpent}
+                            type="text" 
+                            placeholder='Actual spent(£)'
+                            onChange={(e) => setActualSpent(e.target.value)}
+                          />
+                        </div>
+
+                        <button
+                          type='button'
+                          className='save-to-archive-btn'
+                          onClick={() => handleSaveArchive(plan)}
+                        >Save to archive</button>
+                        <button
+                          type='button'
+                          className='cancel-btn'
+                          onClick={() => setArchivingPlanId(null)}
+                        >Cancel</button>
+                      </div>
+                    </div>
+                  )}
                 </div>  
+
+
           ))}
           </div>
         ) }

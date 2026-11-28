@@ -1,0 +1,57 @@
+.archived-card {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  margin: 18px 0;
+  padding: 20px;
+}
+.archived-card-title-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.archived-card-title-area .star {
+  color: rgb(255, 196, 0);
+}
+.archived-card-review {
+  align-items: center;
+  margin-bottom: 10px;  
+}
+
+.archived-card-category-area {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.category {
+  background-color: #334155;
+  padding: 10px;
+  align-items: center;
+  border-radius: 8px;
+  margin-right: 10px;
+}
+.tags {
+  display: flex;
+}
+.tag {
+  display: flex;
+  background-color: #334155;
+  padding: 10px;
+  align-items: center;
+  border-radius: 8px;
+  margin-right: 10px;
+}
+.archived-card-budget-area {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.archived-card-remove-btn {
+  cursor: pointer;
+  background-color: #bd3e3e;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  color: white;
+}

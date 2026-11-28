@@ -2,26 +2,65 @@ import GroupSetup from './components/GroupSetup'
 import { useState } from 'react';
 import PlanTab from './components/PlanTab';
 import WalletTab from './components/WalletTab';
-// import ArchiveTab from './components/ArchiveTab';
-// import WalletTab from './components/WalletTab';
+import ArchiveTab from './components/ArchiveTab';
 import './App.css';
 
 function App() {
   const [groupCode, setGroupCode] = useState('');
-  const [groupName, setGroupName] = useState('Lovely Couple')
+  const [groupName, setGroupName] = useState('')
   const [activeTab, setActiveTab] = useState('Plan')
+  const [groupMembers, setGroupMembers] = useState([])
+  const [currentUser, setCurrentUser] = useState('')
 
-  function handleGroupReady({ code, name }) {
+  const [plans, setPlans] = useState([]);
+  const [archivePlans, setArchivePlans] = useState([]);
+
+  function handleGroupReady(groupData) {
+    if (!groupData) return;
+
+    const code = groupData.code || groupData.groupCode || '';
+    const name = groupData.name || groupData.groupName || '';
+    const rawMember = groupData.groupMembers ?? groupData.members ?? [];
+
     setGroupCode(code);
     if (name) {
       setGroupName(name);
     }
+    if (Array.isArray(rawMember) && rawMember.length > 0) {
+      setGroupMembers(rawMember);
+      setCurrentUser(rawMember[0])
+    }
   }
+
   if (!groupCode) {
     return <GroupSetup onGroupReady={handleGroupReady} />
   }
-  return (
 
+  //Find the plan card that matches planId
+  function handleArchivePlan (planId, archiveData) {
+    const targetPlan = plans.find((plan) => plan.id === planId);
+
+    if (!targetPlan) return;
+
+    const completedPlan = {
+      ...targetPlan,
+      ...archiveData,
+    }
+    //Keep existing archived plans and append the selected plan
+    //Renew setPlans with which is not same planId
+    setArchivePlans((prev) => [...prev, completedPlan]);
+    setPlans((prev) => prev.filter((plan) => plan.id !== planId));
+    setActiveTab('Archive');
+  }
+
+  function handleRemoveArchivedPlan (planId) {
+    setArchivePlans((prevArchivedPlan) => prevArchivedPlan.filter((plan) => plan.id !== planId))
+  }
+
+
+  
+
+  return (
     <main>
       <header>
         <div className='logo-area'>
@@ -35,8 +74,21 @@ function App() {
         </div>
 
         <div className='profile-area'>
-          <div>Y</div>
-          <p>You(You)</p>
+          {groupMembers.map((member) => {
+            const isCurrent = member === currentUser;
+            return (
+              <div
+                key={member}
+                onClick={() => setCurrentUser(member)}
+                className={`user ${isCurrent? 'active' : ''}`}
+              >
+                <span>{member[0]?.toUpperCase()}</span>
+                <p>{isCurrent ? `${member}(you)` : member}</p>
+              </div>
+              
+
+            )
+          })}
         </div>
 
         <div
@@ -48,13 +100,25 @@ function App() {
         </div>
 
         <div className='tabs-area'>
-          <button type='button' onClick={() => { setActiveTab('Plan') }}>Plan</button>
-          <button type='button' onClick={() => { setActiveTab('Archive') }}>Archive</button>
-          <button type='button' onClick={() => { setActiveTab('Wallet') }}>Wallet</button>
+          <button 
+            type='button' 
+            onClick={() => { setActiveTab('Plan')}}
+            className={`tab-btn ${activeTab === 'Plan' ? 'active' : ''}`}
+           >Plan</button>
+          <button 
+            type='button' 
+            onClick={() => { setActiveTab('Archive') }}
+            className={`tab-btn ${activeTab === 'Archive' ? 'active' : ''}`}
+          >Archive</button>
+          <button 
+            type='button' 
+            onClick={() => { setActiveTab('Wallet') }}
+            className={`tab-btn ${activeTab === 'Wallet' ? 'active' : ''}`}
+          >Wallet</button>
         </div>
       </header>
 
-
+{/* 
       <div className='vote-description-area'>
         <div>
           <p>1 . Add</p>
@@ -68,32 +132,33 @@ function App() {
           <p>3 . Go</p>
           <p>then archive it</p>
         </div>
-      </div>
-
-<<<<<<< HEAD
-  {/* <div className='vote-notice-area'>
-          <h3>1 idea need your vote</h3>
-          <button>Vote now</button>
       </div> */}
 
-  {/* <div className='decide-for-us-area'>
-          <button>Decide for us</button>
-      </div> */}
-=======
-      <div className='vote-notice-area'>
+      {/* <div className='vote-notice-area'>
         <h3>1 idea need your vote</h3>
         <button>Vote now</button>
       </div>
 
       <div className='decide-for-us-area'>
         <button>Decide for us</button>
-      </div>
->>>>>>> featA-Patrick
+      </div> */}
 
-  { activeTab === 'Plan' && <PlanTab code={groupCode} /> }
+  { activeTab === 'Plan' && <PlanTab 
+    code={groupCode} 
+    groupMembers={groupMembers} 
+    currentUser={currentUser} 
+    plans={plans} 
+    setPlans={setPlans} 
+    handleArchivePlan={handleArchivePlan}/> }
+
   { activeTab === 'Wallet' && <WalletTab code={groupCode} /> }
-  {/* {activeTab === 'Archive' && <ArchiveTab code={code}/>}
-      {activeTab === 'plan' && <WalletTab code={code}/>} */}
+
+  { activeTab === 'Archive' && <ArchiveTab 
+    archivePlans={archivePlans}
+    code={groupCode}
+    handleRemoveArchivedPlan={handleRemoveArchivedPlan}
+  />}
+
 
     </main >
   )
